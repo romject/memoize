@@ -1,29 +1,29 @@
-const cache = new Map();
 function generator(args) {
-    const hashTest = [];
+    const hashArray = [];
     for (let i = 0; i <= args.length - 1; i += 1) {
         const hashPart = args[i] + typeof args[i];
-        hashTest.push(hashPart);
+        hashArray.push(hashPart);
     }
-    const final = hashTest.join('');
-    return final;
+    const finalHash = hashArray.join('');
+    return finalHash;
 }
 
-export function memoize(fn, ...args) {
+export function memoize(fn) {
+    const cache = {};
     if (typeof (fn) !== 'function') {
         return null;
     }
-    return () => {
+    return function Test(...args) {
         const args1 = [];
-        for (let i = 1; i < arguments.length; i += 1) {
+        for (let i = 0; i < args.length; i += 1) {
             args1.push(args[i]);
         }
         const key = generator(args1);
-        if (cache.has(key)) {
-            return cache.get;
+        if (key in cache) {
+            return cache[key];
         } {
-            const result = fn(...args);
-            cache.set(key, result);
+            const result = fn.call(this, ...args);
+            cache[key] = result;
             return result;
         }
     };
